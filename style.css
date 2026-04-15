@@ -1,3 +1,54 @@
-#root {
-  color: red;
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 20px;
 }
+
+/* Grid container */
+#root {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* Each card (anchor wraps everything) */
+.episode-link {
+  display: block;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  color: #000;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.name {
+  font-size: 18px;
+  font-weight: 600;
+  padding: 12px;
+  margin: 0;
+}
+
+.episode-link img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.summary {
+  padding: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #444;
+}
+
+.summary p {
+  margin: 0;
+}
+
+/* .summary {
+  max-height: 120px;
+  overflow: hidden;
+} */
