@@ -24,6 +24,12 @@ body {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+h3 {
+
+height: 35px;
+
+}
+
 .name {
   font-size: 18px;
   font-weight: 600;
@@ -35,6 +41,7 @@ body {
   width: 100%;
   height: auto;
   display: block;
+
 }
 
 .summary {
