@@ -94,6 +94,7 @@ function filterAndRender() {
 
 // search box
 const searchInput = document.getElementById("search");
+// add debouncing here
 searchInput.addEventListener("input", (event) => {
   state.searchTerm = event.target.value.trim();
   filterAndRender();
@@ -112,8 +113,9 @@ function populateDropdownOptions() {
 
   state.episodes.forEach((episode) => {
     const option = document.createElement("option");
-    option.textContent = `${getEpisodeCode(episode)} - ${episode.name}`;
-    option.value = getEpisodeCode(episode);
+    const code = getEpisodeCode(episode);
+    option.textContent = `${code} - ${episode.name}`;
+    option.value = code;
 
     select.appendChild(option);
   });
