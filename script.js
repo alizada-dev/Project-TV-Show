@@ -10,12 +10,14 @@ const getEpisodeCode = (episode) => {
   const seasonNo = String(episode.season).padStart(2, "0");
   const episodeNo = String(episode.number).padStart(2, "0");
   return `S${seasonNo}E${episodeNo}`;
-}
+};
 
 const state = {
   searchTerm: "",
   episodes: [],
   selectEpisode: "",
+  shows: [],
+  selectedShow: "",
 };
 
 const createEpisodeCard = (episode) => {
@@ -46,7 +48,7 @@ async function fetchEpisodes() {
     loader.textContent = "";
     populateDropdownOptions();
     filterAndRender();
-
+    selectShow();
   } catch (error) {
     errorMessage.textContent = "Unable to load episodes. Please try again!";
     loader.textContent = "";
@@ -55,9 +57,17 @@ async function fetchEpisodes() {
 
 fetchEpisodes();
 
+async function fetchShows() {
+  const showResponse = await fetch("https://api.tvmaze.com/shows");
+  const result = await showResponse.json();
+  state.shows = result;
+  selectShow();
+}
+fetchShows();
 
 function filterAndRender() {
   const searchTerm = state.searchTerm.toLowerCase();
+  const selectedShow = state.selectedShow.toLocaleLowerCase();
   const selected = state.selectEpisode;
 
   mainContainer.textContent = "";
@@ -69,10 +79,11 @@ function filterAndRender() {
     const matchSearchTerm =
       episodeName.includes(searchTerm) || episodeSummary.includes(searchTerm);
 
-    const matchSelection =
-      selected === getEpisodeCode(item) || selected === "";
-
-    return matchSearchTerm && matchSelection;
+    const matchSelection = selected === getEpisodeCode(item) || selected === "";
+    const showName =
+      item._links?.show?.name?.toLowerCase() || item.showName?.toLowerCase();
+    const matchShow = selectedShow === "" || selectedShow.includes(showName);
+    return matchSearchTerm && matchSelection && matchShow;
   });
 
   const episodeCards = filteredEpisodes.map(createEpisodeCard);
@@ -86,7 +97,8 @@ function filterAndRender() {
 
   // message if no episode matches the searchTerm
   if (filteredEpisodes.length === 0) {
-    message.textContent = "No episodes found. Try another input in the search box."
+    message.textContent =
+      "No episodes found. Try another input in the search box.";
   } else {
     message.textContent = "";
   }
@@ -123,6 +135,43 @@ function populateDropdownOptions() {
 
 select.addEventListener("change", (event) => {
   state.selectEpisode = event.target.value;
+
+  filterAndRender();
+});
+
+const showSelection = document.getElementById("show");
+function selectShow() {
+  showSelection.innerHTML = "";
+  const showOption = document.createElement("option");
+
+  showOption.textContent = "Please select show";
+  showOption.value = "";
+  showSelection.appendChild(showOption);
+  const showNameArr = [];
+  state.shows.forEach((show) => {
+    const showName = show.name;
+    const showID = show.id;
+    console.log(showName + showID);
+    showNameArr.push(showName + showID);
+  });
+
+  showNameArr.sort().forEach((item) => {
+    const options = document.createElement("option");
+    options.textContent = `${item}`;
+    options.value = `${item}`;
+    showSelection.appendChild(options);
+  });
+}
+
+showSelection.addEventListener("change", async (e) => {
+  const showId = e.target.value;
+
+  if (!showId) return;
+
+  const res = await fetch(`https://api.tvmaze.com/shows/${showId}/episodes`);
+  const episodes = await res.json();
+
+  state.episodes = episodes;
 
   filterAndRender();
 });
