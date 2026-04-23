@@ -42,8 +42,19 @@ const createEpisodeCard = (episode) => {
 async function fetchShows() {
   const res = await fetch("https://api.tvmaze.com/shows");
   const data = await res.json();
+
   state.shows = data;
   populateShowDropdown();
+
+  
+  const firstShow = state.shows[0];
+
+  if (firstShow) {
+    showSelection.value = firstShow.id;
+    state.selectedShow = firstShow.id;
+
+    await fetchEpisodesByShow(firstShow.id);
+  }
 }
 fetchShows();
 
