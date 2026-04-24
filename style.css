@@ -22,6 +22,7 @@ body {
   margin-bottom: 24px;
 }
 
+#show,
 #select,
 #search{
   padding: 12px 14px;
@@ -33,9 +34,24 @@ body {
   transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
-#select {
+#select, #show {
   cursor: pointer;
   min-width: 220px;
+}
+
+.show-summary {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #444;
+}
+
+.show-summary p {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
 }
 
 #search{
